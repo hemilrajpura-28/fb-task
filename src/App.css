@@ -1,0 +1,45 @@
+.login-form {
+  justify-content: center;
+  min-height: 90vh;
+}
+.button-block {
+  width: 100%;
+}
+.login-background {
+  justify-content: center;
+  min-height: 30vh;
+  padding: 50px;
+}
+
+a {
+  text-decoration: none;
+  color: white;
+}
+
+.searchUser {
+  justify-content: center;
+  display: flex;
+  margin: 50px 0;
+}
+.searchUserSection input {
+  margin: 30px 0;
+  text-align: center;
+  border: 1px gray solid;
+}
+.searchUserSection button {
+  padding: 8px 10px;
+  background-color: #e7f0fe;
+  border: 1px solid gray;
+  margin: 0 5px;
+}
+.searchUserSection li {
+  border: 1px solid transparent;
+  cursor: pointer;
+}
+.searchUserSection li:hover {
+  border: 1px solid gray;
+}
+.searchUserSection {
+  justify-content: center;
+  align-items: center;
+}
