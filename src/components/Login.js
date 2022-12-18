@@ -10,7 +10,7 @@ import {
   Link,
 } from "@material-ui/core";
 import { useNavigate } from "react-router-dom";
-
+import LoaderCircle from "../components/LoaderCircle";
 import { doc, getFirestore, getDoc } from "firebase/firestore";
 import app from "../firebase/firebase";
 const db = getFirestore(app);
@@ -22,7 +22,7 @@ const Register = ({ setIsLogin }) => {
     password: "",
     authflag: 1,
   });
-
+  const [isLoading, setIsLoading] = useState(false);
   useEffect(() => {
     if (localStorage.getItem("login")) {
       navigate("/");
@@ -37,6 +37,7 @@ const Register = ({ setIsLogin }) => {
   }
   async function handleSubmit(event) {
     event.preventDefault();
+    setIsLoading(true);
     const docRef = doc(db, "users", state.email);
     const docSnap = await getDoc(docRef);
     const docData = docSnap.data();
@@ -47,10 +48,12 @@ const Register = ({ setIsLogin }) => {
     ) {
       localStorage.setItem("login", state.email);
       setIsLogin(true);
+      setIsLoading(false);
       alert("Login Successful");
       navigate("/searchUser");
       // docSnap.data()
     } else {
+      setIsLoading(false);
       alert("Incorrect Credentials!");
     }
   }
@@ -66,6 +69,11 @@ const Register = ({ setIsLogin }) => {
         </Toolbar>
       </AppBar>
       <Grid container spacing={0} justify="center" direction="row">
+        {isLoading && (
+          <div className="loading">
+            <LoaderCircle />
+          </div>
+        )}
         <Grid item>
           <Grid
             container
@@ -127,11 +135,6 @@ const Register = ({ setIsLogin }) => {
                     </Grid>
                   </Grid>
                 </form>
-              </Grid>
-              <Grid item>
-                <Link href="#" variant="body2">
-                  Forgot Password?
-                </Link>
               </Grid>
             </Paper>
           </Grid>

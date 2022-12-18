@@ -19,6 +19,7 @@ import {
   where,
   query,
 } from "firebase/firestore";
+import LoaderCircle from "../components/LoaderCircle";
 import app from "../firebase/firebase";
 import { inputAdornmentClasses } from "@mui/material";
 import emailjs, { send } from "emailjs-com";
@@ -31,7 +32,7 @@ const Register = () => {
     }
   }, []);
   const navigate = useNavigate();
-
+  const [isLoading, setIsLoading] = useState(false);
   const [state, setState] = useState({
     email: "",
     username: "",
@@ -48,10 +49,12 @@ const Register = () => {
   }
   async function handleSubmit(event) {
     event.preventDefault();
+    setIsLoading(true);
     const docRef = doc(db, "users", state.email);
     const docSnap = await getDoc(docRef);
 
     if (docSnap.exists()) {
+      setIsLoading(false);
       alert("User already exists, Go for Login or different email");
       // docSnap.data()
     } else {
@@ -61,9 +64,11 @@ const Register = () => {
         username: state.username,
         password: state.password,
       });
+      setIsLoading(false);
       alert("registered");
       navigate("/Login");
     }
+    setIsLoading(false);
   }
 
   return (
@@ -78,6 +83,11 @@ const Register = () => {
         </Toolbar>
       </AppBar>
       <Grid container spacing={0} justify="center" direction="row">
+        {isLoading && (
+          <div className="loading">
+            <LoaderCircle />
+          </div>
+        )}
         <Grid item>
           <Grid
             container

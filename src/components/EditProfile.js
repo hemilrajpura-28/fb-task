@@ -17,6 +17,8 @@ import {
   getDoc,
 } from "firebase/firestore";
 import app from "../firebase/firebase";
+import LoaderCircle from "../components/LoaderCircle";
+
 const db = getFirestore(app);
 
 const EditUser = ({ setIsLogin }) => {
@@ -33,9 +35,10 @@ const EditUser = ({ setIsLogin }) => {
     password: "",
     oldPassword: "",
   });
-
+  const [isLoading, setIsLoading] = useState(false);
   async function handleSubmit(e) {
     e.preventDefault();
+    setIsLoading(true);
     const docRef = doc(db, "users", localStorage.getItem("login"));
     const docSnap = await getDoc(docRef);
     if (docSnap.data()["password"] !== state.oldPassword) {
@@ -44,6 +47,8 @@ const EditUser = ({ setIsLogin }) => {
         ...state,
         oldPassword: "",
       });
+      setIsLoading(false);
+
       return;
     }
     if (state.oldPassword === state.password) {
@@ -52,6 +57,7 @@ const EditUser = ({ setIsLogin }) => {
         ...state,
         oldPassword: "",
       });
+      setIsLoading(false);
       return;
     }
     const Ref = doc(db, "users", localStorage.getItem("login"));
@@ -65,13 +71,16 @@ const EditUser = ({ setIsLogin }) => {
       oldPassword: "",
     });
     alert("User Details Updated");
+    setIsLoading(false);
   }
   async function handleGetData() {
+    setIsLoading(true);
     const docRef = doc(db, "users", localStorage.getItem("login"));
     const docSnap = await getDoc(docRef);
     if (docSnap.exists()) {
       setState(docSnap.data());
     }
+    setIsLoading(false);
   }
 
   function handleChange(event) {
@@ -82,15 +91,18 @@ const EditUser = ({ setIsLogin }) => {
   }
 
   async function deleteAccountHandler() {
+    setIsLoading(true);
     const docRef = doc(db, "users", localStorage.getItem("login"));
     const docSnap = await getDoc(docRef);
     if (docSnap.data()["password"] !== state.oldPassword) {
+      setIsLoading(false);
       alert("Enter the correct current password");
       return;
     }
     await deleteDoc(doc(db, "users", localStorage.getItem("login")));
     localStorage.removeItem("login");
     setIsLogin(false);
+    setIsLoading(true);
     navigate("/Login");
   }
   return (
@@ -104,7 +116,13 @@ const EditUser = ({ setIsLogin }) => {
           </Grid>
         </Toolbar>
       </AppBar>
+
       <Grid container spacing={0} justify="center" direction="row">
+        {isLoading && (
+          <div className="loading">
+            <LoaderCircle />
+          </div>
+        )}
         <Grid item>
           <Grid
             container

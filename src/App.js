@@ -18,7 +18,6 @@ function App() {
     <div className="App">
       <Router>
         <NavBar {...{ isLogin, setIsLogin }} logoutHandler={logoutHandler} />
-        <div>{isLogin && <h1>Welcome {localStorage.getItem("login")}</h1>}</div>
         <Routes>
           <Route path="/" element={null} />
           <Route path="/Login" element={<Login {...{ setIsLogin }} />} />
